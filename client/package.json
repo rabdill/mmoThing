@@ -1,0 +1,19 @@
+{
+  "name": "mmothing",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Multiplayer noodling",
+  "repository": "https://github.com/rabdill/mmothing",
+  "license": "None",
+  "devDependencies": {
+    "http-server": "^0.6.1"
+  },
+  "scripts": {
+    "prestart": "npm install",
+    "start": "http-server -a localhost -p 8000 -c-1"
+  },
+  "dependencies": {
+    "angular": "^1.4.7",
+    "angular-route": "^1.4.7"
+  }
+}
