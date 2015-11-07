@@ -3,8 +3,11 @@ var Schema = mongoose.Schema;
 
 var citySchema = new Schema({
 	name : String,
-	population : Number,
-	last_updated : { type : Date, default: Date.now } 
+	population : {
+		value: Number,
+		rate: { type : Number, default: 1 }
+	},
+	last_updated : { type : Date, default: Date.now }
 });
 
 module.exports = {
