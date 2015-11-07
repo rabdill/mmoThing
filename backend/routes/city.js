@@ -2,13 +2,13 @@ var City = require('../models/city').City;
 
 var update = function(city) {
 	var now = new Date().getTime();
-	console.log("Now: " + now);
 	var last = new Date(city.last_updated).getTime();
-	console.log("Then: " + last);
-	var elapsed = Math.floor((now - last)/1000);
-	console.log("Elapsed: " + elapsed);
 
-	city.population.value += elapsed * city.population.rate;
+	// update tax revenue before population gets updated:
+	city.coin.count += city.coin.ratePerCapita * city.population.count;
+
+	// update population:
+	city.population.count += ((now - last)/1000) * city.population.rate;
 	city.last_updated = now;
 	return city;
 };
@@ -41,15 +41,12 @@ exports.demolish = function(req, res) {
 			res.json(500, { message: err });
 		} else {
 			var timestamp = Math.floor(new Date() / 1000);
-			var delran = new City({
-				name: "Delran",
-				population: {value: 20}
-			});
+			var delran = new City({	name: "Delran"});
 			delran.save(function(err) {
 				if(err) {
 					res.json(500, { message: err });
 				} else {
-					res.json(201, { message: delran.population.value });
+					res.json(201, { message: delran.population.count });
 				}
 			});
 		}
