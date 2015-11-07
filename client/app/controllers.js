@@ -2,8 +2,8 @@ var mmoControllers = angular.module('mmoControllers', [
 	'ngRoute'
 ]);
 
-mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '$http',
-	function ($scope, $q, $interval, CitySvc, $http) {
+mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', 'StoreSvc',
+	function ($scope, $q, $interval, CitySvc, StoreSvc) {
 
 	/* for printing, round down non-integers for categories where decimals
 			don't make sense
@@ -32,13 +32,12 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 
 	// buy a house
 	$scope.buyHouse = function() {
-		$http.post('http://localhost:3000/Delran/purchase/house')
-			.success(function(data) {
-				console.log(data);
-			})
-			.error(function(err) {
-				console.log(err);
-			});
+		StoreSvc.house().then(function(data) {
+			console.log(data.message);
+		})
+		.catch(function(err) {
+			console.log(err);
+		});
 	};
 
 }]);
