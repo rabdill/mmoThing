@@ -5,7 +5,7 @@ mmoThing.service("CitySvc", ["$http", "$q", function($http, $q) {
 
 	self.getStats = function() {
 		return $q(function(resolve, reject) {
-			$http.get('http://localhost:3000/Delran/home')
+			$http.post('http://localhost:3000/Delran/home')
 				.success(function(res) {
 					resolve(res);
 				})

@@ -23,9 +23,8 @@ app.use(app.router);
 app.use(express.static(__dirname + '/public'));
 
 // ROUTES HERE!
-app.get('/:city/home', city.square);
+app.post('/:city/home', city.square);		// "post" to avoid caching
 app.post('/reload/really', city.demolish);
-//app.post('/people/register', people.create);
 
 // Aaaaand here we go:
 http.createServer(app).listen(app.get('port'), function(){
