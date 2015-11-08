@@ -3,8 +3,15 @@
 	<li>Population: {{ city.population.count }} / {{ city.population.capacity }}
 	<li>Coin: {{ city.coin.count }} (net/tick: {{ city.coin.ratePerCapita * city.population.count }})
 	<li>Food: {{ city.food.count }} (net/tick: {{ city.food.rate - (city.food.consumptionPerCapita * city.population.count) }})
-	<li>Houses: {{ city.buildings.houses.length }} <button ng-click="buy('house');">Buy house</button>
 	<li>Farms: {{ city.buildings.farms.length }} <button ng-click="buy('farm');">Buy farm</button>
 </ul>
-{{ city }}<br>
-<button ng-click="stop();">Stop</button>
+<div>
+	<h2>Houses</h2>
+	<p>{{ city.buildings.houses.length }} <button ng-click="buy('house');">Buy house</button>
+	<ul>
+		<li ng-repeat="house in city.buildings.houses">{{ houseData.levels[house.level].name }}</li>
+	</ul>
+<div>
+	{{ city }}<br>
+	<button ng-click="stop();">Stop</button>
+</div>
