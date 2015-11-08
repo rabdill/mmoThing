@@ -1,9 +1,9 @@
 <h2>{{ city.name }}</h2>
 <ul>
 	<li>Population: {{ city.population.count }} / {{ city.population.capacity }}
-	<li>Coin: {{ city.coin.count }}
-	<li>Food: {{ city.food.count }}
-	<li>Houses: {{ city.buildings.houses.length }} <button ng-click="buyHouse();">Buy house</button>
+	<li>Coin: {{ city.coin.count }} (net/tick: {{ city.coin.ratePerCapita * city.population.count }})
+	<li>Food: {{ city.food.count }} (net/tick: {{ city.food.rate - (city.food.consumptionPerCapita * city.population.count) }})
+	<li>Houses: {{ city.buildings.houses.length }} <button ng-click="buy('house');">Buy house</button>
 </ul>
 {{ city }}<br>
 <button ng-click="stop();">Stop</button>

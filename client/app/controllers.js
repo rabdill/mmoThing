@@ -26,8 +26,8 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 	};
 
 	// buy a house
-	$scope.buyHouse = function() {
-		StoreSvc.house().then(function(data) {
+	$scope.buy = function(item) {
+		StoreSvc.buy(item).then(function(data) {
 			console.log(data.message);
 		})
 		.catch(function(err) {

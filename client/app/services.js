@@ -18,9 +18,9 @@ mmoThing.service("CitySvc", ["$http", "$q", function($http, $q) {
 
 mmoThing.service("StoreSvc", ["$http", "$q", function($http, $q) {
 	var self = this;
-	self.house = function() {
+	self.buy = function(item) {
 		return $q(function(resolve, reject) {
-			$http.post('http://localhost:3000/Delran/purchase/house')
+			$http.post('http://localhost:3000/Delran/purchase/' + item)
 				.success(function(res) {
 					resolve(res);
 				})
