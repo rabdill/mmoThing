@@ -15,9 +15,8 @@ var citySchema = new Schema({
 		ratePerCapita: { type : Number, default: gameData.baseTaxRevenue }
 	},
 	buildings : {
-		houses : [
-			{level: Number}
-		]
+		houses : [{level : Number}],
+		farms : [{ level : Number }]
 	},
 	food : {
 		count: { type : Number, default : 0 },

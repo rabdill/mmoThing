@@ -4,6 +4,7 @@
 	<li>Coin: {{ city.coin.count }} (net/tick: {{ city.coin.ratePerCapita * city.population.count }})
 	<li>Food: {{ city.food.count }} (net/tick: {{ city.food.rate - (city.food.consumptionPerCapita * city.population.count) }})
 	<li>Houses: {{ city.buildings.houses.length }} <button ng-click="buy('house');">Buy house</button>
+	<li>Farms: {{ city.buildings.farms.length }} <button ng-click="buy('farm');">Buy farm</button>
 </ul>
 {{ city }}<br>
 <button ng-click="stop();">Stop</button>
