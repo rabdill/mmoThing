@@ -1,7 +1,6 @@
 var City = require('../models/city').City;
 
 exports.square = function(req, res) {
-	console.log(req.params.city);
 	City.findByName(req.params.city).
 	then(function(city) {
 		return city.update();
