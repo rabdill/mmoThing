@@ -33,12 +33,9 @@ citySchema.methods.update = function() {
 
 	// save update:
 	return q.promise(function(resolve, reject) {
-		self.model('city').findByIdAndUpdate(self.id, { $set: self }, function(err, city) {
+		self.model('city').update({ _id: self.id }, { $set: self }, function(err) {
 			if(err) reject(err);
-			else if(!city) reject(new Error("No city named " + search));
-			else {
-				resolve(city);
-			}
+			else resolve(self);
 		});
 	});
 };
