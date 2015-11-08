@@ -1,5 +1,5 @@
 var City = require('../models/city').City;
-var houseData = require('../structures').house;
+var houseData = require('../meta/structures').house;
 var q = require('q');
 
 exports.purchase = function(req, res) {
@@ -12,6 +12,7 @@ exports.purchase = function(req, res) {
 			res.json(403, { message: "Not enough coin. Cost is " + houseData.levels[0].cost + "."});
 		} else {
 			city.coin.count -= houseData.levels[0].cost;
+			city.population.capacity += houseData.levels[0].capacity;
 			city.buildings.houses.push({level: 0});
 			City.findByIdAndUpdate(city.id, { $set: city }, function(err, city) {
 				if(err) res.json(500, { message: err });

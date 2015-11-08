@@ -2,8 +2,14 @@ var mmoControllers = angular.module('mmoControllers', [
 	'ngRoute'
 ]);
 
-mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', 'StoreSvc',
-	function ($scope, $q, $interval, CitySvc, StoreSvc) {
+mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', 'StoreSvc', 'MetaSvc',
+	function ($scope, $q, $interval, CitySvc, StoreSvc, MetaSvc) {
+
+	var houseData, gameData;
+	// fetch the house data
+	MetaSvc.house().then(function(res) {
+		houseData = res;
+	});
 
 	/* refreshes data every 3.05 seconds */
 	var updater = $interval(function() {

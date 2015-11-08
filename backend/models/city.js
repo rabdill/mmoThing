@@ -1,12 +1,14 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema;
 var q = require('q');
+var gameData = require('../meta/game').gameData;
 
 var citySchema = new Schema({
 	name : String,
 	population : {
-		count: { type : Number, default: 20 },
-		rate: { type : Number, default: 1 }
+		count: { type : Number, default: 1 },
+		rate: { type : Number, default: 1 },
+		capacity: { type : Number, default: gameData.basePopulationCap },
 	},
 	coin : {
 		count: { type : Number, default: 0 },
@@ -24,9 +26,17 @@ citySchema.methods.update = function() {
 	var self = this;	// in this case, will be a particular city
 	var now = new Date().getTime();
 	var last = new Date(self.last_updated).getTime();
+
 	// fast-forward however many ticks have happened since last update:
 	for(var i=0; i < ((now - last)/1000); i++) {
-		self.population.count += self.population.rate;
+		// check if there's room for more people:
+		if(self.population.count < self.population.capacity) {
+			if(self.population.count + self.population.rate > self.population.capacity) {
+				self.population.count = self.population.capacity;
+			} else {
+				self.population.count += self.population.rate;
+			}
+		}
 		self.coin.count += self.coin.ratePerCapita * self.population.count;
 	}
 	self.last_updated = now;
