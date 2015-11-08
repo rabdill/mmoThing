@@ -7,17 +7,22 @@ var citySchema = new Schema({
 	name : String,
 	population : {
 		count: { type : Number, default: 1 },
-		rate: { type : Number, default: 1 },
+		rate: { type : Number, default: gameData.basePopulationGrowth },
 		capacity: { type : Number, default: gameData.basePopulationCap },
 	},
 	coin : {
 		count: { type : Number, default: 0 },
-		ratePerCapita: { type : Number, default: 0.1 }
+		ratePerCapita: { type : Number, default: gameData.baseTaxRevenue }
 	},
 	buildings : {
 		houses : [
 			{level: Number}
 		]
+	},
+	food : {
+		count: { type : Number, default : 0 },
+		rate: { type : Number, default : gameData.baseFoodProduction},
+		consumptionPerCapita: { type : Number, default : gameData.baseFoodConsumption }
 	},
 	last_updated : { type : Date, default: Date.now }
 });
@@ -29,7 +34,7 @@ citySchema.methods.update = function() {
 
 	// fast-forward however many ticks have happened since last update:
 	for(var i=0; i < ((now - last)/1000); i++) {
-		// check if there's room for more people:
+		// check if there's room for more people, add them:
 		if(self.population.count < self.population.capacity) {
 			if(self.population.count + self.population.rate > self.population.capacity) {
 				self.population.count = self.population.capacity;
@@ -37,7 +42,10 @@ citySchema.methods.update = function() {
 				self.population.count += self.population.rate;
 			}
 		}
+		// add tax revenue:
 		self.coin.count += self.coin.ratePerCapita * self.population.count;
+		// add food:
+		self.food.count += self.food.rate - (self.food.consumptionPerCapita * self.population.count);
 	}
 	self.last_updated = now;
 
