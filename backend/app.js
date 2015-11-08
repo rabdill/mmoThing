@@ -29,6 +29,7 @@ app.use(express.static(__dirname + '/public'));
 app.post('/:city/home', city.square);
 app.post('/:city/purchase/house', house.purchase);
 app.post('/:city/purchase/farm', farm.purchase);
+app.post('/:city/upgrade/house', house.upgrade);
 app.post('/reload/really', city.demolish);
 app.get('/meta/:category', meta.lookup);
 

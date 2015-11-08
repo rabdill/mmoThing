@@ -20,7 +20,20 @@ mmoThing.service("StoreSvc", ["$http", "$q", function($http, $q) {
 	var self = this;
 	self.buy = function(item) {
 		return $q(function(resolve, reject) {
-			$http.post('http://localhost:3000/Delran/purchase/' + item)
+			params = {level : 0};
+			$http.post('http://localhost:3000/Delran/purchase/' + item, params)
+				.success(function(res) {
+					resolve(res);
+				})
+				.error(reject);
+		});
+	};
+	self.upgrade = function(item, id) {
+		return $q(function(resolve, reject) {
+			var params = {
+				id : id
+			};
+			$http.post('http://localhost:3000/Delran/upgrade/' + item, params)
 				.success(function(res) {
 					resolve(res);
 				})
