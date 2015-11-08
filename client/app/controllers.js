@@ -5,21 +5,11 @@ var mmoControllers = angular.module('mmoControllers', [
 mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', 'StoreSvc',
 	function ($scope, $q, $interval, CitySvc, StoreSvc) {
 
-	/* for printing, round down non-integers for categories where decimals
-			don't make sense
-	*/
-	var applyRounding = function(cityData) {
-		cityData.population.count = Math.floor(cityData.population.count);
-		return cityData;
-	}
-
 	/* refreshes data every 3.05 seconds */
 	var updater = $interval(function() {
 		CitySvc.getStats().then(function(data) {
-			$scope.data = {};
-			angular.copy(data, $scope.data); // for printing out the HTTP response literally
-
-			$scope.city = applyRounding(data);
+			$scope.data = data.raw;
+			$scope.city = data.printable;
 		});
 		console.log("Fetching...");
 	}, 3050);
