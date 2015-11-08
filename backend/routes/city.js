@@ -1,23 +1,16 @@
 var City = require('../models/city').City;
 
 exports.square = function(req, res) {
-	City.findOne({ name: req.params.city }, function(err, city) {
-		if(err) {
-			res.json(500, { message: err });
-		} else {
-			if(!city) {
-				console.log(req.query);
-				res.json(404, { message: "No city called " + req.params.city });
-			}
-			else {
-				city.update(function (err, data) {
-					if(err) res.json(500, { message: err });
-					else {
-						res.json(200, city);
-					}
-				});
-			}
-		}
+	console.log(req.params.city);
+	City.findByName(req.params.city).
+	then(function(city) {
+		return city.update();
+	}).
+	then(function(data) {
+		res.json(200, data);
+	}).
+	fail(function(err) {
+		res.json(500, { message: "Something broke somewhere else." });
 	});
 };
 

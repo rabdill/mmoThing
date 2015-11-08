@@ -20,20 +20,26 @@ var citySchema = new Schema({
 	last_updated : { type : Date, default: Date.now }
 });
 
-citySchema.methods.update = function(callback) {
+citySchema.methods.update = function() {
 	var self = this;	// in this case, will be a particular city
 	var now = new Date().getTime();
-	var last = new Date(this.last_updated).getTime();
+	var last = new Date(self.last_updated).getTime();
 
 	// update tax revenue before population gets updated:
-	this.coin.count += this.coin.ratePerCapita * this.population.count;
+	self.coin.count += self.coin.ratePerCapita * self.population.count;
 
 	// update population:
-	this.population.count += ((now - last)/1000) * this.population.rate;
-	this.last_updated = now;
-
-	// write it back to DB
-	return this.model('city').findByIdAndUpdate(this.id, { $set: this }, callback);
+	self.population.count += ((now - last)/1000) * self.population.rate;
+	self.last_updated = now;
+	return q.promise(function(resolve, reject) {
+		self.model('city').findByIdAndUpdate(self.id, { $set: self }, function(err, city) {
+			if(err) reject(err);
+			else if(!city) reject(new Error("No city named " + search));
+			else {
+				resolve(city);
+			}
+		});
+	});
 };
 
 citySchema.statics.findByName = function(search) {
