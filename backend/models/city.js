@@ -19,7 +19,21 @@ var citySchema = new Schema({
 	last_updated : { type : Date, default: Date.now }
 });
 
+citySchema.methods.findByName = function(search) {
+	var self = this;	// in this case, will be the "city" schema as a whole
+	return q.promise(function(resolve, reject) {
+		self.findOne({ name: search }, function(err, city) {
+			if(err) reject(err);
+			else if(!city) reject(new Error("No city named " + search));
+			else {
+				resolve(city);
+			}
+		});
+	});
+}
+
 citySchema.methods.update = function(callback) {
+	var self = this;	// in this case, will be a particular city
 	var now = new Date().getTime();
 	var last = new Date(this.last_updated).getTime();
 
