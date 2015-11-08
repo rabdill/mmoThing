@@ -2,8 +2,8 @@
 <button ng-click="stop();">Stop</button>
 <ul>
 	<li>Population: {{ city.population.count }} / {{ city.population.capacity }}
-	<li>Coin: {{ city.coin.count }} (net/tick: {{ city.coin.ratePerCapita * city.population.count }})
-	<li>Food: {{ city.food.count }} (net/tick: {{ city.food.rate - (city.food.consumptionPerCapita * city.population.count) }})
+	<li>Coin: {{ city.coin.count }} (net/tick: {{ city.coin.net }})
+	<li>Food: {{ city.food.count }} (net/tick: {{ city.food.net }})
 </ul>
 <div>
 	<h2>Houses</h2>
