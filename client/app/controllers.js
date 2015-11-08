@@ -8,8 +8,7 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 	/* refreshes data every 3.05 seconds */
 	var updater = $interval(function() {
 		CitySvc.getStats().then(function(data) {
-			$scope.data = data.raw;
-			$scope.city = data.printable;
+			$scope.city = data;
 		});
 		console.log("Fetching...");
 	}, 3050);
