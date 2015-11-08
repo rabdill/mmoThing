@@ -24,13 +24,14 @@ citySchema.methods.update = function() {
 	var self = this;	// in this case, will be a particular city
 	var now = new Date().getTime();
 	var last = new Date(self.last_updated).getTime();
-
-	// update tax revenue before population gets updated:
-	self.coin.count += self.coin.ratePerCapita * self.population.count;
-
-	// update population:
-	self.population.count += ((now - last)/1000) * self.population.rate;
+	// fast-forward however many ticks have happened since last update:
+	for(var i=0; i < ((now - last)/1000); i++) {
+		self.population.count += self.population.rate;
+		self.coin.count += self.coin.ratePerCapita * self.population.count;
+	}
 	self.last_updated = now;
+
+	// save update:
 	return q.promise(function(resolve, reject) {
 		self.model('city').findByIdAndUpdate(self.id, { $set: self }, function(err, city) {
 			if(err) reject(err);
