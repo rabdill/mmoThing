@@ -16,7 +16,7 @@
 	<h2>Farms</h2>
 	<p>{{ city.buildings.farms.length }} <button ng-click="buy('farm');">Buy farm</button>
 	<ul>
-		<li ng-repeat="farm in city.buildings.farms">{{ farmData.levels[farm.level].name }}</li>
+		<li ng-repeat="farm in city.buildings.farms">{{ farmData.levels[farm.level].name }} <button ng-click="upgrade('farm', farm._id)">Upgrade</button></li>
 	</ul>
 </div>
 <div>
