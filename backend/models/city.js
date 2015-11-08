@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema;
+var q = require('q');
 
 var citySchema = new Schema({
 	name : String,
@@ -19,19 +20,6 @@ var citySchema = new Schema({
 	last_updated : { type : Date, default: Date.now }
 });
 
-citySchema.methods.findByName = function(search) {
-	var self = this;	// in this case, will be the "city" schema as a whole
-	return q.promise(function(resolve, reject) {
-		self.findOne({ name: search }, function(err, city) {
-			if(err) reject(err);
-			else if(!city) reject(new Error("No city named " + search));
-			else {
-				resolve(city);
-			}
-		});
-	});
-}
-
 citySchema.methods.update = function(callback) {
 	var self = this;	// in this case, will be a particular city
 	var now = new Date().getTime();
@@ -48,6 +36,19 @@ citySchema.methods.update = function(callback) {
 	return this.model('city').findByIdAndUpdate(this.id, { $set: this }, callback);
 };
 
+citySchema.statics.findByName = function(search) {
+	var self = this;	// in this case, will be the "city" schema as a whole
+	return q.promise(function(resolve, reject) {
+		self.findOne({ name: search }, function(err, city) {
+			if(err) reject(err);
+			else if(!city) reject(new Error("No city named " + search));
+			else {
+				resolve(city);
+			}
+		});
+	});
+}
+
 module.exports = {
-	City: mongoose.model('city', citySchema)
+	City: mongoose.model('city', citySchema),
 };

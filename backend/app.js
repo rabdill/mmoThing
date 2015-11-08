@@ -24,7 +24,7 @@ app.use(app.router);
 app.use(express.static(__dirname + '/public'));
 
 // ROUTES HERE!
-app.post('/:city/home', city.square);		// "post" to avoid caching
+app.post('/:city/home', city.square);
 app.post('/:city/purchase/house', house.purchase);
 app.post('/reload/really', city.demolish);
 
