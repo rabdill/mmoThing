@@ -33,12 +33,12 @@ module.exports = {
 			{	// initial purchase
 				name : "small garden",
 				cost : 25,
-				rate : 1	// generated per tick
+				rate : .1	// generated per tick
 			},
 			{	// level 1
 				name : "garden",
 				cost : 45,
-				rate : 3
+				rate : 1
 			}
 		]
 	}

@@ -11,7 +11,7 @@ var citySchema = new Schema({
 		capacity: { type : Number, default: gameData.basePopulationCap },
 	},
 	coin : {
-		count: { type : Number, default: 0 },
+		count: { type : Number, default: 25 },
 		ratePerCapita: { type : Number, default: gameData.baseTaxRevenue }
 	},
 	buildings : {
@@ -19,7 +19,7 @@ var citySchema = new Schema({
 		farms : [{ level : Number }]
 	},
 	food : {
-		count: { type : Number, default : 0 },
+		count: { type : Number, default : 5 },
 		rate: { type : Number, default : gameData.baseFoodProduction},
 		consumptionPerCapita: { type : Number, default : gameData.baseFoodConsumption }
 	},
