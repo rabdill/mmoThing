@@ -44,8 +44,8 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 	};
 
 	// sell food
-	$scope.sellFood = function(units) {
-		StoreSvc.sell('food',5).then(function(data) {
+	$scope.sellFood = function(qty) {
+		StoreSvc.sell('food',qty).then(function(data) {
 			console.log(data.message);
 		})
 		.catch(function(err) {

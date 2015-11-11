@@ -3,7 +3,7 @@
 <ul>
 	<li>Population: {{ city.population.count }} / {{ city.population.capacity }}
 	<li>Coin: {{ city.coin.count }} (net/hr: {{ city.coin.net * 3600 }})
-	<li>Food: {{ city.food.count }} (net/hr: {{ city.food.net * 3600 }}) <button ng-click="sellFood(5);">Sell 5</button>
+	<li>Food: {{ city.food.count }} (net/hr: {{ city.food.net * 3600 }}) <button ng-click="sellFood(5);">Sell 5</button> <button ng-click="sellFood(50);">Sell 50</button>
 </ul>
 <div>
 	<h2>Houses</h2>
@@ -16,7 +16,7 @@
 	<h2>Farms</h2>
 	<p>{{ city.buildings.farms.length }} <button ng-click="buy('farm',0);">Buy farm</button>
 	<ul>
-		<li ng-repeat="farm in city.buildings.farms | orderBy: 'level'">{{ farmData.levels[farm.level].name }} {{ farm.level }}<button ng-click="buy('farm',farm.level + 1);">Upgrade</button></li>
+		<li ng-repeat="farm in city.buildings.farms | orderBy: 'level'">{{ farmData.levels[farm.level].name }}<button ng-click="buy('farm',farm.level + 1);">Upgrade</button></li>
 	</ul>
 </div>
 <div>
