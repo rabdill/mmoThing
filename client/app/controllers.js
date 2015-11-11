@@ -34,19 +34,8 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 	};
 
 	// buy a thing
-	$scope.buy = function(item) {
-		StoreSvc.buy(item).then(function(data) {
-			console.log(data.message);
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
-	};
-
-	// upgrade a thing
-	$scope.upgrade = function(item, id) {
-		console.log(id);
-		StoreSvc.upgrade(item, id).then(function(data) {
+	$scope.buy = function(item, qty) {
+		StoreSvc.buy(item, qty).then(function(data) {
 			console.log(data.message);
 		})
 		.catch(function(err) {

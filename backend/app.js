@@ -1,7 +1,7 @@
 var express = require('express');
 var http = require('http');
 var city = require('./routes/city');
-var structure = require('./routes/structure');
+var market = require('./routes/market');
 var meta = require('./routes/meta');
 var mongoose = require('mongoose');
 var cors = require('cors')
@@ -26,10 +26,8 @@ app.use(express.static(__dirname + '/public'));
 
 // ROUTES HERE!
 app.post('/:city/home', city.square);
-app.post('/:city/purchase/:structure', structure.purchase);
-app.post('/:city/upgrade/:structure', structure.upgrade);
-
-app.post('/:city/sell/:item', structure.sell);
+app.post('/:city/purchase/:structure', market.purchase);
+app.post('/:city/sell/:item', market.sell);
 
 app.post('/reload/really', city.demolish);
 app.get('/meta/:category', meta.lookup);
