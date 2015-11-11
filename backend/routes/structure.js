@@ -1,5 +1,6 @@
 var City = require('../models/city').City;
 var structures = require('../meta/structures');
+var sellPrice = require('../meta/market').sellPrice;
 var q = require('q');
 
 var self = this;
@@ -38,6 +39,7 @@ exports.purchase = function(req, res) {
 	}).
 	fail(function(err) {
 		console.log(err);
+		res.json(500, { message: err });
 	});
 };
 
@@ -98,5 +100,37 @@ exports.upgrade = function(req, res) {
 	}).
 	fail(function(err) {
 		console.log(err);
+		res.json(500, { message: err });
+	});
+};
+
+exports.sell = function(req, res) {
+	City.findByName(req.params.city).
+	then(function(city) {
+		return city.update();
+	}).
+	then(function (city) {
+		// made the structure-specific modifications to the city:
+		switch(req.params.item) {
+			case "food":
+				if(city.food.count >= req.body.qty) {
+					city.food.count -= req.body.qty;
+					city.coin.count += req.body.qty * sellPrice.food;
+				} else {
+					res.json(403, { message: "Not enough food to sell that many."});
+				}
+				break;
+		}
+		// re-save the updated city:
+		City.findByIdAndUpdate(city.id, { $set: city }, function(err, city) {
+			if(err) res.json(500, { message: err });
+			else {
+				res.json(200, { message: "Sold " + req.body.qty + " " + req.params.item + "."});
+			}
+		});
+	}).
+	fail(function(err) {
+		console.log(err);
+		res.json(500, { message: err });
 	});
 };

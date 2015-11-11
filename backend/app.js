@@ -29,6 +29,8 @@ app.post('/:city/home', city.square);
 app.post('/:city/purchase/:structure', structure.purchase);
 app.post('/:city/upgrade/:structure', structure.upgrade);
 
+app.post('/:city/sell/:item', structure.sell);
+
 app.post('/reload/really', city.demolish);
 app.get('/meta/:category', meta.lookup);
 

@@ -2,8 +2,8 @@
 <button ng-click="stop();">Stop</button>
 <ul>
 	<li>Population: {{ city.population.count }} / {{ city.population.capacity }}
-	<li>Coin: {{ city.coin.count }} (net/tick: {{ city.coin.net }})
-	<li>Food: {{ city.food.count }} (net/tick: {{ city.food.net }})
+	<li>Coin: {{ city.coin.count }} (net/hr: {{ city.coin.net * 3600 }})
+	<li>Food: {{ city.food.count }} (net/hr: {{ city.food.net * 3600 }}) <button ng-click="sellFood(5);">Sell 5</button>
 </ul>
 <div>
 	<h2>Houses</h2>

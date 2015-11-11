@@ -41,6 +41,19 @@ mmoThing.service("StoreSvc", ["$http", "$q", function($http, $q) {
 		});
 	};
 
+	self.sell = function(item, qty) {
+		return $q(function(resolve, reject) {
+			var params = {
+				qty : qty
+			};
+			$http.post('http://localhost:3000/Delran/sell/' + item, params)
+				.success(function(res) {
+					resolve(res);
+				})
+				.error(reject);
+		});
+	};
+
 	return self;
 }]);
 

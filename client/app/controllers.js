@@ -18,6 +18,7 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 		CitySvc.getStats().then(function(data) {
 			$scope.city = data;
 
+			$scope.city.population.count = Math.floor($scope.city.population.count);
 			$scope.city.coin.count = Math.floor($scope.city.coin.count);
 			$scope.city.food.count = Math.floor($scope.city.food.count);
 			$scope.city.coin.net = Math.floor(100 * ($scope.city.coin.ratePerCapita * $scope.city.population.count)) / 100;
@@ -46,6 +47,16 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 	$scope.upgrade = function(item, id) {
 		console.log(id);
 		StoreSvc.upgrade(item, id).then(function(data) {
+			console.log(data.message);
+		})
+		.catch(function(err) {
+			console.log(err);
+		});
+	};
+
+	// sell food
+	$scope.sellFood = function(units) {
+		StoreSvc.sell('food',5).then(function(data) {
 			console.log(data.message);
 		})
 		.catch(function(err) {
