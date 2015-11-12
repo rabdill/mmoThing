@@ -7,16 +7,16 @@
 </ul>
 <div>
 	<h2>Houses</h2>
-	<p>{{ city.buildings.houses.length }} <button ng-click="buy('house',0);">Buy house</button>
+	<p>{{ city.buildings.houses.length }} <button ng-click="build('house',0);">Build hut</button> (Cost: {{ houseData.levels[0].cost }})
 	<ul>
-		<li ng-repeat="house in city.buildings.houses | orderBy: 'level'">{{ houseData.levels[house.level].name }} <button ng-click="buy('house',house.level + 1);">Upgrade</button></li>
+		<li ng-repeat="house in city.buildings.houses | orderBy: 'level'">{{ houseData.levels[house.level].name }} <button ng-click="build('house',house.level + 1);">Upgrade</button> (Cost: {{ houseData.levels[house.level + 1].cost }})</li>
 	</ul>
 </div>
 <div>
 	<h2>Farms</h2>
-	<p>{{ city.buildings.farms.length }} <button ng-click="buy('farm',0);">Buy farm</button>
+	<p>{{ city.buildings.farms.length }} <button ng-click="build('farm',0);">Plant garden</button> (Cost: {{ farmData.levels[0].cost }})
 	<ul>
-		<li ng-repeat="farm in city.buildings.farms | orderBy: 'level'">{{ farmData.levels[farm.level].name }}<button ng-click="buy('farm',farm.level + 1);">Upgrade</button></li>
+		<li ng-repeat="farm in city.buildings.farms | orderBy: 'level'">{{ farmData.levels[farm.level].name }} <button ng-click="build('farm',farm.level + 1);">Upgrade</button> (Cost: {{ farmData.levels[farm.level + 1].cost }})</li>
 	</ul>
 </div>
 <div>

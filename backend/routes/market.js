@@ -5,7 +5,7 @@ var q = require('q');
 
 var self = this;
 
-exports.purchase = function(req, res) {
+exports.build = function(req, res) {
 	City.findByName(req.params.city).
 	then(function(city) {
 		return city.update();

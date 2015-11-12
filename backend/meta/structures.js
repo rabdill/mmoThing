@@ -31,6 +31,11 @@ module.exports = {
 	farm : {
 		levels : [
 			{	// initial purchase
+				name : "sad cluster of plants",
+				cost : 20,
+				rate : .01	// generated per tick
+			},
+			{	// initial purchase
 				name : "small garden",
 				cost : 25,
 				rate : .1	// generated per tick

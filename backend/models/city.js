@@ -6,12 +6,12 @@ var gameData = require('../meta/game').gameData;
 var citySchema = new Schema({
 	name : String,
 	population : {
-		count: { type : Number, default: 1 },
+		count: { type : Number, default: gameData.basePopulationCount },
 		rate: { type : Number, default: gameData.basePopulationGrowth },
 		capacity: { type : Number, default: gameData.basePopulationCap },
 	},
 	coin : {
-		count: { type : Number, default: 25 },
+		count: { type : Number, default: gameData.baseCoinCount },
 		ratePerCapita: { type : Number, default: gameData.baseTaxRevenue }
 	},
 	buildings : {
@@ -19,7 +19,7 @@ var citySchema = new Schema({
 		farms : [{ level : Number }]
 	},
 	food : {
-		count: { type : Number, default : 5 },
+		count: { type : Number, default : gameData.baseFoodCount },
 		rate: { type : Number, default : gameData.baseFoodProduction},
 		consumptionPerCapita: { type : Number, default : gameData.baseFoodConsumption }
 	},

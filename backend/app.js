@@ -26,7 +26,7 @@ app.use(express.static(__dirname + '/public'));
 
 // ROUTES HERE!
 app.post('/:city/home', city.square);
-app.post('/:city/purchase/:structure', market.purchase);
+app.post('/:city/build/:structure', market.build);
 app.post('/:city/sell/:item', market.sell);
 
 app.post('/reload/really', city.demolish);

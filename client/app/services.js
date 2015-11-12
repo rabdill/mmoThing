@@ -18,12 +18,12 @@ mmoThing.service("CitySvc", ["$http", "$q", function($http, $q) {
 
 mmoThing.service("StoreSvc", ["$http", "$q", function($http, $q) {
 	var self = this;
-	self.buy = function(item, level) {
+	self.build = function(item, level) {
 		if(!level) level == 0;
 
 		return $q(function(resolve, reject) {
 			params = {level : level};
-			$http.post('http://localhost:3000/Delran/purchase/' + item, params)
+			$http.post('http://localhost:3000/Delran/build/' + item, params)
 				.success(function(res) {
 					resolve(res);
 				})
