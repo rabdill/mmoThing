@@ -63,7 +63,7 @@ mmoThing.service("MetaSvc", ["$http", "$q", function($http, $q) {
 	return self;
 }]);
 
-mmoThing.service("LoginSvc", ["$q", function($q) {
+mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 	var self = this;
 
 	self.getUser = function() {
@@ -76,15 +76,23 @@ mmoThing.service("LoginSvc", ["$q", function($q) {
 			});
 
 			FB.getLoginStatus(function(response) {
-				if (response.status === 'connected') {
-					FB.api('/me', function(response) {
-						console.log(response);
-						resolve(response);
-					});
-				} else if (response.status === 'not_authorized') {
-					console.log("You aren't logged into the app.");
-				} else {
-					console.log("You aren't logged into Facebook.");
+				console.log(response);
+				switch(response.status) {
+					case "connected":
+						var params = {
+							token : response.authResponse.accessToken
+						};
+						$http.post('http://localhost:3000/user/' + response.authResponse.userID, params)
+							.success(function(res) {
+								resolve(res);
+							})
+							.error(reject);
+					case "not_authorized":
+						reject("You aren't logged into the app.");
+						break;
+					default:
+						reject("You aren't logged into Facebook.");
+						break;
 				}
 			});
 		});

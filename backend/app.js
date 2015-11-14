@@ -31,6 +31,7 @@ app.post('/:city/sell/:item', market.sell);
 
 app.post('/reload/really', city.demolish);
 app.get('/meta/:category', meta.lookup);
+app.post('/user/:id', meta.userLogin);
 
 // Aaaaand here we go:
 http.createServer(app).listen(app.get('port'), function(){
