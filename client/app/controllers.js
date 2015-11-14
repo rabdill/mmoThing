@@ -3,12 +3,18 @@ var mmoControllers = angular.module('mmoControllers', [
 ]);
 
 mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', function ($scope, LoginSvc, $q) {
-	console.log("In controller!");
-	LoginSvc.getUser().then(function(res) {
-		console.log("Promise resolved");
-		console.log(res);
-		console.log('Successful login for: ' + res.firstName);
-	});
+  $scope.checkLoginState = function() {
+		console.log("In the controller");
+    FB.getLoginStatus(function(response) {
+			console.log("In the callback!");
+      LoginSvc.evaluate(response)
+				.then(function(res) {
+					$scope.name = res.firstName;
+				}
+			);
+    });
+  };
+
 }]);
 
 mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', 'StoreSvc', 'MetaSvc',

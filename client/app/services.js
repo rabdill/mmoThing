@@ -66,38 +66,28 @@ mmoThing.service("MetaSvc", ["$http", "$q", function($http, $q) {
 mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 	var self = this;
 
-	self.getUser = function() {
+	self.evaluate = function(fbook) {
 		return $q(function(resolve, reject) {
-			console.log("Trying...");
-			FB.init({
-				appId      : '1025296660845354',
-				cookie     : true,
-				version    : 'v2.5'
-			});
-
-			FB.getLoginStatus(function(response) {
-				switch(response.status) {
-					case "connected":
-						var params = {
-							token : response.authResponse.accessToken
-						};
-						$http.post('http://localhost:3000/user/' + response.authResponse.userID, params)
-							.success(function(res) {
-								console.log("Wahoo!");
-								console.log(res);
-								resolve(res);
-							})
-							.error(reject);
-					case "not_authorized":
-						reject("You aren't logged into the app.");
-						break;
-					default:
-						reject("You aren't logged into Facebook.");
-						break;
-				}
-			});
+			switch(fbook.status) {
+				case "connected":
+					var params = {
+						token : fbook.authResponse.accessToken
+					};
+					$http.post('http://localhost:3000/user/' + fbook.authResponse.userID, params)
+						.success(function(res) {
+							console.log(res);
+							resolve(res);
+						})
+						.error(reject);
+					break;
+				default:
+					FB.login(function(response){
+						self.evaluate(response);
+					});
+					break;
+			}
 		});
-	}
+	};
 
 	return self;
 }]);
