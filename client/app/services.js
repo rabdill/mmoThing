@@ -75,7 +75,6 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 					};
 					$http.post('http://localhost:3000/user/' + fbook.authResponse.userID, params)
 						.success(function(res) {
-							console.log(res);
 							resolve(res);
 						})
 						.error(reject);

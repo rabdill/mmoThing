@@ -4,14 +4,11 @@ var mmoControllers = angular.module('mmoControllers', [
 
 mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', function ($scope, LoginSvc, $q) {
   $scope.checkLoginState = function() {
-		console.log("In the controller");
-    FB.getLoginStatus(function(response) {
-			console.log("In the callback!");
-      LoginSvc.evaluate(response)
-				.then(function(res) {
-					$scope.name = res.firstName;
-				}
-			);
+    FB.getLoginStatus(function(status) {
+      LoginSvc.evaluate(status)
+			.then(function(res) {
+				$scope.name = res.firstName;
+			});
     });
   };
 
