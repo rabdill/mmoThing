@@ -62,3 +62,33 @@ mmoThing.service("MetaSvc", ["$http", "$q", function($http, $q) {
 
 	return self;
 }]);
+
+mmoThing.service("LoginSvc", ["$q", function($q) {
+	var self = this;
+
+	self.getUser = function() {
+		return $q(function(resolve, reject) {
+			console.log("Trying...");
+			FB.init({
+				appId      : '1025296660845354',
+				cookie     : true,
+				version    : 'v2.5'
+			});
+
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					FB.api('/me', function(response) {
+						console.log(response);
+						resolve(response);
+					});
+				} else if (response.status === 'not_authorized') {
+					console.log("You aren't logged into the app.");
+				} else {
+					console.log("You aren't logged into Facebook.");
+				}
+			});
+		});
+	}
+
+	return self;
+}]);

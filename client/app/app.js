@@ -5,11 +5,15 @@ app = angular.module('mmoThing', [
 
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
-		when('/', {
+		when('/square', {
 			templateUrl: 'views/home.html',
 			controller: 'HomeCtrl'
 		}).
-		otherwise({redirectTo: '/'});
+		when('/', {
+			templateUrl: 'views/index.html',
+			controller: 'FrontCtrl'
+		}).
+		otherwise({redirectTo: '/square'});
 }]);
 
 app.config(['$httpProvider', function($httpProvider) {
