@@ -5,7 +5,7 @@ app = angular.module('mmoThing', [
 
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
-		when('/square', {
+		when('/square/:city', {
 			templateUrl: 'views/home.html',
 			controller: 'HomeCtrl'
 		}).

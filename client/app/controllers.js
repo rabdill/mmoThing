@@ -2,7 +2,7 @@ var mmoControllers = angular.module('mmoControllers', [
 	'ngRoute'
 ]);
 
-mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', function ($scope, LoginSvc, $q) {
+mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location', function ($scope, LoginSvc, $q, $location) {
   $scope.checkLoginState = function() {
     FB.getLoginStatus(function(status) {
       LoginSvc.evaluate(status)
@@ -13,14 +13,15 @@ mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', function ($s
 			})
 			.then(function(res) {
 				$scope.city = res.city;
+				$location.url('square/' + res.city.name);
 			});
     });
   };
 
 }]);
 
-mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', 'StoreSvc', 'MetaSvc',
-	function ($scope, $q, $interval, CitySvc, StoreSvc, MetaSvc) {
+mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", "$routeParams", 'CitySvc', 'StoreSvc', 'MetaSvc',
+	function ($scope, $q, $interval, $routeParams, CitySvc, StoreSvc, MetaSvc) {
 
 	// fetch the game info data
 	MetaSvc.lookup('house').then(function(res) {
@@ -32,7 +33,7 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 
 	/* refreshes data every 3.05 seconds */
 	var updater = $interval(function() {
-		CitySvc.getStats().then(function(data) {
+		CitySvc.getStats($routeParams.city).then(function(data) {
 			$scope.city = data;
 
 			$scope.city.population.count = Math.floor($scope.city.population.count);
