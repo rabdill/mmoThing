@@ -23,10 +23,20 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', '
 			$scope.city.food.count = Math.floor($scope.city.food.count);
 			$scope.city.coin.net = Math.floor(100 * ($scope.city.coin.ratePerCapita * $scope.city.population.count)) / 100;
 			$scope.city.food.net = Math.floor(100 * ($scope.city.food.rate - ($scope.city.food.consumptionPerCapita * $scope.city.population.count))) / 100;
+			setFoodMessage();
 		});
 		console.log("Fetching...");
 	}, 3050);
 
+	var setFoodMessage = function() {
+		if($scope.city.food.net < 0) {
+			$scope.foodMessage = "You aren't pulling in enough food.";
+		} else if($scope.city.food.net === 0) {
+			$scope.foodMessage = "Subsistance farming. Pulling in just enough to survive."
+		} else {
+			$scope.foodMessage = "";
+		}
+	};
 	// for canceling the auto-refresher
 	$scope.stop = function() {
 		console.log("Canceling...");

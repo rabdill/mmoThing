@@ -3,7 +3,7 @@
 <ul>
 	<li>Population: {{ city.population.count }} / {{ city.population.capacity }}
 	<li>Coin: {{ city.coin.count }} (net/hr: {{ city.coin.net * 3600 }})
-	<li>Food: {{ city.food.count }} (net/hr: {{ city.food.net * 3600 }}) <button ng-click="sellFood(5);">Sell 5</button> <button ng-click="sellFood(50);">Sell 50</button>
+	<li>Food: {{ city.food.count }} (net/hr: {{ city.food.net * 3600 }}) <button ng-click="sellFood(5);">Sell 5</button> <button ng-click="sellFood(50);">Sell 50</button> <em>{{ foodMessage }}</em>
 </ul>
 <div>
 	<h2>Houses</h2>
