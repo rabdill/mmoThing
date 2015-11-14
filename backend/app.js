@@ -29,7 +29,7 @@ app.post('/:city/home', city.square);
 app.post('/:city/build/:structure', market.build);
 app.post('/:city/sell/:item', market.sell);
 
-app.post('/reload/really', city.demolish);
+app.post('/reload/really', meta.newFakeGame);
 app.get('/meta/:category', meta.lookup);
 app.post('/user/:id', meta.userLogin);
 

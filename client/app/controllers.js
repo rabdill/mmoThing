@@ -2,13 +2,13 @@ var mmoControllers = angular.module('mmoControllers', [
 	'ngRoute'
 ]);
 
-mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q',
-	function ($scope, LoginSvc, $q) {
-		$scope.user = LoginSvc.getUser().then(function(response) {
-			console.log('Successful login for: ' + response.name);
-			document.getElementById('status').innerHTML =
-				'Thanks for logging in, ' + response.name + '!';
-		});
+mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', function ($scope, LoginSvc, $q) {
+	console.log("In controller!");
+	LoginSvc.getUser().then(function(res) {
+		console.log("Promise resolved");
+		console.log(res);
+		console.log('Successful login for: ' + res.firstName);
+	});
 }]);
 
 mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", 'CitySvc', 'StoreSvc', 'MetaSvc',

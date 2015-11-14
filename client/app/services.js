@@ -76,7 +76,6 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 			});
 
 			FB.getLoginStatus(function(response) {
-				console.log(response);
 				switch(response.status) {
 					case "connected":
 						var params = {
@@ -84,6 +83,8 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 						};
 						$http.post('http://localhost:3000/user/' + response.authResponse.userID, params)
 							.success(function(res) {
+								console.log("Wahoo!");
+								console.log(res);
 								resolve(res);
 							})
 							.error(reject);

@@ -2,6 +2,8 @@ var structures = require('../meta/structures');
 var gameData = require('../meta/game').gameData;
 var secrets = require('../meta/secrets');
 var https = require('https');
+var User = require('../models/user').User;
+var City = require('../models/city').City;
 
 exports.lookup = function(req, res) {
 	switch(req.params.category) {
@@ -29,9 +31,64 @@ exports.userLogin = function(req, res) {
 
 	var verifyToken = function(data, userId) {
 		if(data.app_id == secrets.appId && data.is_valid && data.user_id == userId) {
-			console.log("WE DID IT!!!");
+			User.findById(userId).then(function(user) {
+				res.json(200, user);
+			});
 		} else {
 			console.log("HACKER ALARM");
+			res.json(400);
 		}
+	};
+};
+
+exports.newFakeGame = function(req, res) {
+	var createCity, deleteUser, createUser;
+
+	City.remove({ name: "Delran" }, function(err) {
+		if(err) {
+			res.json(500, { message: err });
+		} else {
+			deleteUser();
+		}
+	});
+
+	createCity = function(user) {
+		var timestamp = Math.floor(new Date() / 1000);
+		var delran = new City({	name: "Delran"});
+		delran.save(function(err) {
+			if(err) {
+				res.json(500, { message: err });
+			} else {
+				res.json(201, user);
+			}
+		});
+	};
+
+	deleteUser = function() {
+		User.remove({ fbook : {"id" : "1520815294896220"} }, function(err) {
+			if(err) {
+				res.json(500, { message: err });
+			} else {
+				createUser();
+			}
+		});
+	};
+
+	createUser = function() {
+		var richard = new User({
+			firstName : "Rich",
+			fbook : {
+				id: "1520815294896220",
+				token : secrets.richsUserToken,
+				expires : 1447524000000
+			}
+		});
+		richard.save(function(err) {
+			if(err) {
+				res.json(500, { message: err });
+			} else {
+				createCity(richard);
+			}
+		});
 	};
 };
