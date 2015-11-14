@@ -8,6 +8,11 @@ mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', function ($s
       LoginSvc.evaluate(status)
 			.then(function(res) {
 				$scope.name = res.firstName;
+
+				return LoginSvc.getCity(res.fbook.id);
+			})
+			.then(function(res) {
+				$scope.city = res.city;
 			});
     });
   };

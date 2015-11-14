@@ -88,5 +88,15 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 		});
 	};
 
+	self.getCity = function(userId) {
+		return $q(function(resolve, reject) {
+			$http.get('http://localhost:3000/user/' + userId + '/getCity')
+				.success(function(res) {
+					resolve({"city" : res});
+				})
+				.error(reject);
+		});
+	};
+
 	return self;
 }]);

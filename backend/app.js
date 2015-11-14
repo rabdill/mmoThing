@@ -32,6 +32,7 @@ app.post('/:city/sell/:item', market.sell);
 app.post('/reload/really', meta.newFakeGame);
 app.get('/meta/:category', meta.lookup);
 app.post('/user/:id', meta.userLogin);
+app.get('/user/:id/getCity', city.findByUser);
 
 // Aaaaand here we go:
 http.createServer(app).listen(app.get('port'), function(){

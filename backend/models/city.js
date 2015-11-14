@@ -5,6 +5,7 @@ var gameData = require('../meta/game').gameData;
 
 var citySchema = new Schema({
 	name : String,
+	ruler : String,
 	population : {
 		count: { type : Number, default: gameData.basePopulationCount },
 		rate: { type : Number, default: gameData.basePopulationGrowth },
@@ -68,7 +69,21 @@ citySchema.statics.findByName = function(search) {
 			}
 		});
 	});
+};
+
+citySchema.statics.findByUser = function(search) {
+	var self = this;	// in this case, will be the "city" schema as a whole
+	return q.promise(function(resolve, reject) {
+		self.findOne({ ruler: search }, function(err, city) {
+			if(err) reject(err);
+			else if(!city) reject(new Error("No city for userId " + search));
+			else {
+				resolve(city);
+			}
+		});
+	});
 }
+
 
 module.exports = {
 	City: mongoose.model('city', citySchema),

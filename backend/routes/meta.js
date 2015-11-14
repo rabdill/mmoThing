@@ -54,7 +54,10 @@ exports.newFakeGame = function(req, res) {
 
 	createCity = function(user) {
 		var timestamp = Math.floor(new Date() / 1000);
-		var delran = new City({	name: "Delran"});
+		var delran = new City({
+			name: "Delran",
+			ruler: secrets.richFbookId
+		});
 		delran.save(function(err) {
 			if(err) {
 				res.json(500, { message: err });
@@ -65,7 +68,7 @@ exports.newFakeGame = function(req, res) {
 	};
 
 	deleteUser = function() {
-		User.remove({ fbook : {"id" : "1520815294896220"} }, function(err) {
+		User.remove({ fbook : {"id" : secrets.richFbookId } }, function(err) {
 			if(err) {
 				res.json(500, { message: err });
 			} else {
@@ -78,7 +81,7 @@ exports.newFakeGame = function(req, res) {
 		var richard = new User({
 			firstName : "Rich",
 			fbook : {
-				id: "1520815294896220",
+				id: secrets.richFbookId,
 				token : secrets.richsUserToken,
 				expires : 1447524000000
 			}
