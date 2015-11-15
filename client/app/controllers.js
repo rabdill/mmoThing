@@ -58,7 +58,7 @@ mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location',
 	};
 }]);
 
-mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", "$routeParams", 'CitySvc', 'StoreSvc', 'MetaSvc',
+mmoControllers.controller('SquareCtrl', ['$scope', "$q", "$interval", "$routeParams", 'CitySvc', 'StoreSvc', 'MetaSvc',
 	function ($scope, $q, $interval, $routeParams, CitySvc, StoreSvc, MetaSvc) {
 
 	// fetch the game info data
@@ -71,40 +71,46 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", "$routeParam
 
 	var fetchData = function() {
 		CitySvc.getStats($routeParams.city).then(function(data) {
-			$scope.city = data;
-
-			$scope.city.population.count = Math.floor($scope.city.population.count);
-			$scope.city.coin.count = Math.floor($scope.city.coin.count);
-			$scope.city.food.count = Math.floor($scope.city.food.count);
-			$scope.city.coin.net = Math.floor(100 * ($scope.city.coin.ratePerCapita * $scope.city.population.count)) / 100;
-			$scope.city.food.net = Math.floor(100 * ($scope.city.food.rate - ($scope.city.food.consumptionPerCapita * $scope.city.population.count))) / 100;
-			setFoodMessage();
+			$scope.city = displayFormatting(data);
 		});
 		console.log("Fetching...");
 	};
 
-	fetchData();
-	/* refreshes data every 3.05 seconds */
-	var updater = $interval(fetchData(), 3050);
-
-	var setFoodMessage = function() {
-		if($scope.city.food.net < 0) {
-			$scope.foodMessage = "You aren't pulling in enough food.";
-		} else if($scope.city.food.net === 0) {
-			$scope.foodMessage = "Subsistance farming. Pulling in just enough to survive."
-		} else {
-			$scope.foodMessage = "";
-		}
+	var rounder = function(number, places) {
+		return Math.floor(number * (10 ^ places)) / (10 ^ places);
 	};
+	var displayFormatting = function(city) {
+		city.population.count = rounder(city.population.count, 0);
+		city.coin.count = rounder(city.coin.count, 0);
+		city.food.count = rounder(city.food.count, 0);
+
+		city.coin.netHr = rounder(city.coin.ratePerCapita * city.population.count * 3600, 2);
+		city.food.netHr = rounder(3600 * (city.food.rate - (city.food.consumptionPerCapita * city.population.count)), 2);
+
+		// setting foodMessage:
+		if(city.food.net < 0) {
+			city.foodMessage = "You aren't pulling in enough food.";
+		} else if(city.food.net === 0) {
+			city.foodMessage = "Subsistance farming. Pulling in just enough to survive."
+		} else {
+			city.foodMessage = "";
+		}
+		return city;
+	};
+
+	/* refreshes data on load, then every 3.05 seconds */
+	fetchData();
+	var updater = $interval(fetchData, 3050);
+
 	// for canceling the auto-refresher
 	$scope.stop = function() {
 		console.log("Canceling...");
 		$interval.cancel(updater);
 	};
 
-	// buy a thing
+	// build a thing
 	$scope.build = function(item, qty) {
-		StoreSvc.build(item, qty).then(function(data) {
+		StoreSvc.build(item, qty, $scope.city.name).then(function(data) {
 			console.log(data.message);
 		})
 		.catch(function(err) {
@@ -121,5 +127,4 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", "$routeParam
 			console.log(err);
 		});
 	};
-
 }]);

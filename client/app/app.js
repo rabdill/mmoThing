@@ -6,8 +6,8 @@ app = angular.module('mmoThing', [
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
 		when('/square/:city', {
-			templateUrl: 'views/home.html',
-			controller: 'HomeCtrl'
+			templateUrl: 'views/square.html',
+			controller: 'SquareCtrl'
 		}).
 		when('/', {
 			templateUrl: 'views/index.html',
