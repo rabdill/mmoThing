@@ -6,7 +6,6 @@ mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location',
 	var attempts = 0;	// to prevent a zillion facebook popups
   $scope.checkLoginState = function() {
     FB.getLoginStatus(function(status) {
-			console.log("We're checkin!");
 			attempts++;
 			LoginSvc.evaluate(status)
 			.then(function(res) {	// if they are logged in now
@@ -27,7 +26,7 @@ mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location',
 					return $q.reject();
 				} else if(err == "no account") {
 					console.log("New user!");
-					prepareNewUser();
+					prepareNewUser(status.authResponse);
 					return $q.reject();
 				}
 			})
@@ -42,8 +41,20 @@ mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location',
     });
   };
 
+	// dealing with new users:
+	var details;
 	var prepareNewUser = function(data) {
 		$scope.newUserTime = true;
+		details = {
+			token : data.accessToken,
+			userId : data.userID
+		};
+	};
+	$scope.createUser = function() {
+		details.town = $scope.town;
+		LoginSvc.newUser(details).then(function(user) {
+			console.log(user);
+		});
 	};
 }]);
 

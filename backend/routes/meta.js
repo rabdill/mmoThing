@@ -2,6 +2,7 @@ var structures = require('../meta/structures');
 var gameData = require('../meta/game').gameData;
 var secrets = require('../meta/secrets');
 var https = require('https');
+var http = require('http');
 var User = require('../models/user').User;
 var City = require('../models/city').City;
 
@@ -53,10 +54,55 @@ exports.userLogin = function(req, res) {
 	};
 };
 
+exports.createUser = function(req, res) {
+	var reqUrl = "https://graph.facebook.com/v2.5/debug_token?input_token=" + req.body.token + "&access_token=" + secrets.appId + "|" + secrets.appSecret;
+
+	https.get(reqUrl, function(fbook) {
+		fbook.on("data", function(response) {	// wait for the body of the response
+			response = JSON.parse(response);	// convert it to an object
+			console.log(response.data);
+			createRuler(response.data);
+	  });
+	});
+
+	var createRuler = function(data) {
+		var newUser = new User({
+			fbook : {
+				id: req.body.userId,
+				token : req.body.token,
+				expires : data.expires_at * 1000
+			}
+		});
+		newUser.save(function(err) {
+			if(err) {
+				res.json(500, { message: err });
+			} else {
+				createCity();
+			}
+		});
+	};
+
+	var createCity = function() {
+		var timestamp = Math.floor(new Date() / 1000);
+		var newCity = new City({
+			name: req.body.town,
+			ruler: req.body.userId
+		});
+		newCity.save(function(err) {
+			if(err) {
+				res.json(500, { message: err });
+			} else {
+				res.json(201, newCity);
+			}
+		});
+	};
+
+};
+
 exports.newFakeGame = function(req, res) {
 	var createCity, deleteUser, createUser;
 
-	City.remove({ name: "Delran" }, function(err) {
+	City.remove({}, function(err) {
 		if(err) {
 			res.json(500, { message: err });
 		} else {
@@ -80,7 +126,7 @@ exports.newFakeGame = function(req, res) {
 	};
 
 	deleteUser = function() {
-		User.remove({ 'fbook.id' : secrets.richFbookId }, function(err) {
+		User.remove({}, function(err) {
 			if(err) {
 				res.json(500, { message: err });
 			} else {

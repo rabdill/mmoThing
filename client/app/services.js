@@ -78,11 +78,9 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 					resolve(res);	// facebook says connected and we know about them
 				})
 				.error(function(err) {
-					console.log("here3");
 					reject("no account");
 				});
 			} else {
-				console.log("here2");
 				reject("not logged in");	// if facebook says user isn't connected
 			}
 		});
@@ -95,9 +93,21 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 				.success(function(res) {
 					resolve({"city" : res});
 				})
-				.error(reject);
+				.error(function() {
+					reject();
+				});
 		});
 	};
+
+	self.newUser = function(user) {
+		return $q(function(resolve, reject) {
+			$http.post('http://localhost:3000/user/create', user)
+				.success(function(res) {
+					resolve("yaaay");
+				})
+				.error(reject);
+		});
+	}
 
 	return self;
 }]);

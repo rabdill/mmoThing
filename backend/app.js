@@ -31,6 +31,8 @@ app.post('/:city/sell/:item', market.sell);
 
 app.post('/reload/really', meta.newFakeGame);
 app.get('/meta/:category', meta.lookup);
+
+app.post('/user/create', meta.createUser);
 app.post('/user/:id', meta.userLogin);
 app.get('/user/:id/getCity', city.findByUser);
 
