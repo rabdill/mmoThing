@@ -68,22 +68,22 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 
 	self.evaluate = function(fbook) {
 		return $q(function(resolve, reject) {
-			console.log("Analyzing status " + fbook.status);
-			switch(fbook.status) {
-				case "connected":
-					console.log("Yup it's connected.");
-					var params = {
-						token : fbook.authResponse.accessToken
-					};
-					$http.post('http://localhost:3000/user/' + fbook.authResponse.userID, params)
-						.success(function(res) {
-							resolve(res);
-						})
-						.error(reject);
-					break;
-				default:
-					reject("Gots to log in man");
-					break;
+			if(fbook.status == "connected") {
+				var params = {
+					token : fbook.authResponse.accessToken
+				};
+				$http.post('http://localhost:3000/user/' + fbook.authResponse.userID, params)
+				.success(function(res) {
+					console.log("Found user!");
+					resolve(res);	// facebook says connected and we know about them
+				})
+				.error(function(err) {
+					console.log("here3");
+					reject("no account");
+				});
+			} else {
+				console.log("here2");
+				reject("not logged in");	// if facebook says user isn't connected
 			}
 		});
 	};

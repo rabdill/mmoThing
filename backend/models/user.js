@@ -27,11 +27,17 @@ userSchema.methods.update = function(data) {
 };
 
 userSchema.statics.findById = function(search) {
-	var self = this;	// in this case, will be the "city" schema as a whole
+	var self = this;
 	return q.promise(function(resolve, reject) {
 		self.findOne({ 'fbook.id' : search }, function(err, user) {
-			if(err) reject(err);
-			else if(!user) reject(new Error("No user with id " + search));
+			if(err) {
+				console.log("NO.");
+				console.log(err);
+				reject(err);
+			}
+			else if(!user) {
+				reject(new Error("No user with id " + search));
+			}
 			else {
 				resolve(user);
 			}

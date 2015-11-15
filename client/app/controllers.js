@@ -3,38 +3,48 @@ var mmoControllers = angular.module('mmoControllers', [
 ]);
 
 mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location', function ($scope, LoginSvc, $q, $location) {
+	var attempts = 0;	// to prevent a zillion facebook popups
   $scope.checkLoginState = function() {
     FB.getLoginStatus(function(status) {
-			console.log("Sending...");
-			processEvaluation(status);
+			console.log("We're checkin!");
+			attempts++;
+			LoginSvc.evaluate(status)
+			.then(function(res) {	// if they are logged in now
+				console.log("User accepted.");
+				$scope.name = res.firstName;
+				return LoginSvc.getCity(res.fbook.id);
+			},
+			function(err) {	// if they aren't logged in
+				if(err == "not logged in") {
+					console.log("Not logged in.");
+					if(attempts < 2) {
+						FB.login(function(){	// pop up the FB login box
+							$scope.checkLoginState();	// then do this again
+						});
+					} else {
+						attempts = 0; // so they can hit the button again
+					}
+					return $q.reject();
+				} else if(err == "no account") {
+					console.log("New user!");
+					prepareNewUser();
+					return $q.reject();
+				}
+			})
+			.then(function(res) {	// once we get their city
+				if(!res) {	// if they never actually logged in (i.e. closed the login box)
+					console.log("Nothin.");
+					return $q.reject();
+				}
+				$scope.city = res.city;
+				$location.url('square/' + res.city.name);
+			});
     });
   };
 
-	/* this is split out into a separate function so we
-			can call it recursively. This is necessary when the
-			FB.login() function is invoked for someone who's
-			not properly logged into facebook, to prevent forcing
-			users to click the "login" button a second time once
-			they've granted facebook access. */
-
-	var processEvaluation = function(status) {
-		LoginSvc.evaluate(status)
-		.then(function(res) {
-			$scope.name = res.firstName;
-			return LoginSvc.getCity(res.fbook.id);
-		})
-		.then(function(res) {
-			$scope.city = res.city;
-			$location.url('square/' + res.city.name);
-		})
-		.catch(function() {
-			console.log("Catchin it");
-			FB.login(function(response){
-				processEvaluation(response);
-			});
-		});
+	var prepareNewUser = function(data) {
+		$scope.newUserTime = true;
 	};
-
 }]);
 
 mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", "$routeParams", 'CitySvc', 'StoreSvc', 'MetaSvc',

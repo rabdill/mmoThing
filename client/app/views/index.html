@@ -1,9 +1,9 @@
 <button ng-click="checkLoginState();">Log me in with Facebook</button>
 
-<div>
-	{{ name }}
-</div>
+<div ng-show="newUserTime">
+	<h2>Signin' up some fools</h2>
+	<p><em>An account could not be found using these credentials &mdash; if you want to create one, just fill out the form below.</em></p>
+	<form>
+		<input type="text" ng-bind="user.name"><br>
 
-<div>
-	{{ city.name }}
 </div>

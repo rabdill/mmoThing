@@ -17,24 +17,36 @@ exports.lookup = function(req, res) {
 };
 
 exports.userLogin = function(req, res) {
-	//console.log(req.body);
 	// verify that the token that was just sent has been issued for our app
 	var reqUrl = "https://graph.facebook.com/v2.5/debug_token?input_token=" + req.body.token + "&access_token=" + secrets.appId + "|" + secrets.appSecret;
+
 	https.get(reqUrl, function(fbook) {
-		fbook.on("data", function(response) {
+		fbook.on("data", function(response) {	// wait for the body of the response
 			response = JSON.parse(response);	// convert it to an object
 			verifyToken(response.data, req.params.id);	// take facebook's response and make sure it matches what we want
 	  });
-	}).on('error', function(e) {
-		console.log("Got error: " + e.message);
 	});
 
 	var verifyToken = function(data, userId) {
+		console.log("Verifying");
 		if(data.app_id == secrets.appId && data.is_valid && data.user_id == userId) {
-			User.findById(userId).then(function(user) {
-				res.json(200, user);
+			// if the token's legit, check if we know the user
+			/* (this doesn't use a method attached to the User model because
+					doing so here made everything look like a damn car crash.) */
+			User.findOne({ 'fbook.id' : userId }, function(err, user) {
+				if(err) {
+					console.log(err);
+					res.json(500);
+				}
+				else if(!user) {
+					res.json(404, null);	/* if you don't put "null" here, it sends
+																	a 200 response with "404" as the body. */
+				}
+				else {
+					res.json(200, user);
+				}
 			});
-		} else {
+		} else {	// if the token is invalid or doesn't match
 			console.log("HACKER ALARM");
 			res.json(400);
 		}
@@ -68,7 +80,7 @@ exports.newFakeGame = function(req, res) {
 	};
 
 	deleteUser = function() {
-		User.remove({ fbook : {"id" : secrets.richFbookId } }, function(err) {
+		User.remove({ 'fbook.id' : secrets.richFbookId }, function(err) {
 			if(err) {
 				res.json(500, { message: err });
 			} else {
