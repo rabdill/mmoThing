@@ -69,8 +69,7 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", "$routeParam
 		$scope.farmData = res;
 	});
 
-	/* refreshes data every 3.05 seconds */
-	var updater = $interval(function() {
+	var fetchData = function() {
 		CitySvc.getStats($routeParams.city).then(function(data) {
 			$scope.city = data;
 
@@ -82,7 +81,11 @@ mmoControllers.controller('HomeCtrl', ['$scope', "$q", "$interval", "$routeParam
 			setFoodMessage();
 		});
 		console.log("Fetching...");
-	}, 3050);
+	};
+
+	fetchData();
+	/* refreshes data every 3.05 seconds */
+	var updater = $interval(fetchData(), 3050);
 
 	var setFoodMessage = function() {
 		if($scope.city.food.net < 0) {
