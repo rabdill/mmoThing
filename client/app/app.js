@@ -11,7 +11,7 @@ app.config(['$routeProvider', function($routeProvider) {
 		}).
 		when('/', {
 			templateUrl: 'views/index.html',
-			controller: 'FrontCtrl'
+			controller: 'LoginCtrl'
 		}).
 		otherwise({redirectTo: '/square'});
 }]);

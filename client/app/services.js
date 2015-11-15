@@ -66,23 +66,32 @@ mmoThing.service("MetaSvc", ["$http", "$q", function($http, $q) {
 mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 	var self = this;
 
-	self.evaluate = function(fbook) {
+	self.FBcheck = function() {	// if they're logged into facebook
 		return $q(function(resolve, reject) {
-			if(fbook.status == "connected") {
-				var params = {
-					token : fbook.authResponse.accessToken
-				};
-				$http.post('http://localhost:3000/user/' + fbook.authResponse.userID, params)
-				.success(function(res) {
-					console.log("Found user!");
-					resolve(res);	// facebook says connected and we know about them
-				})
-				.error(function(err) {
-					reject("no account");
-				});
-			} else {
-				reject("not logged in");	// if facebook says user isn't connected
-			}
+			FB.getLoginStatus(function(data) {
+				console.log(data);
+				if(data.status == "connected") {
+					resolve(data);
+				} else {
+					reject("not logged in");
+				}
+			});
+		});
+	};
+
+	self.gameCheck = function(fbook) {	// if we know about them
+		return $q(function(resolve, reject) {
+			var params = {
+				token : fbook.authResponse.accessToken
+			};
+			$http.post('http://localhost:3000/user/' + fbook.authResponse.userID, params)
+			.success(function(res) {
+				console.log("Found user!");
+				resolve(res);
+			})
+			.error(function(err) {
+				reject("no account");
+			});
 		});
 	};
 
@@ -107,7 +116,7 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 				})
 				.error(reject);
 		});
-	}
+	};
 
 	return self;
 }]);

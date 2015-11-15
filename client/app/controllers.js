@@ -2,43 +2,48 @@ var mmoControllers = angular.module('mmoControllers', [
 	'ngRoute'
 ]);
 
-mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location', function ($scope, LoginSvc, $q, $location) {
+mmoControllers.controller('LoginCtrl', ['$scope', 'LoginSvc', '$q', '$location', function ($scope, LoginSvc, $q, $location) {
 	var attempts = 0;	// to prevent a zillion facebook popups
+
   $scope.checkLoginState = function() {
-    FB.getLoginStatus(function(status) {
-			attempts++;
-			LoginSvc.evaluate(status)
-			.then(function(res) {	// if they are logged in now
+		LoginSvc.FBcheck()
+		.then(function(status) {	 // if they're logged in
+			return LoginSvc.gameCheck(status);
+		},
+		function() {	// if they aren't logged in
+			console.log("Not logged in.");
+			if(attempts < 2) {
+				FB.login(function(){	// pop up the FB login box
+					$scope.checkLoginState();	// then do this again
+				});
+			} else {	// chill if they've already closed the login box once
+				attempts = 0; // so they can hit the button again
+			}
+			return $q.reject("not logged in");
+		})
+		.then(function(res) {	// if they're a known player
 				console.log("User accepted.");
-				$scope.name = res.firstName;
 				return LoginSvc.getCity(res.fbook.id);
 			},
-			function(err) {	// if they aren't logged in
-				if(err == "not logged in") {
-					console.log("Not logged in.");
-					if(attempts < 2) {
-						FB.login(function(){	// pop up the FB login box
-							$scope.checkLoginState();	// then do this again
-						});
-					} else {
-						attempts = 0; // so they can hit the button again
-					}
-					return $q.reject();
-				} else if(err == "no account") {
+			function(err) {	// if they're new or not logged in
+				if(err != "not logged in") {
+					err = "new user";
 					console.log("New user!");
 					prepareNewUser(status.authResponse);
-					return $q.reject();
 				}
+				return $q.reject(err);
 			})
 			.then(function(res) {	// once we get their city
-				if(!res) {	// if they never actually logged in (i.e. closed the login box)
-					console.log("Nothin.");
+				if(!res) {	// still trying to figure out why this would happen
+					console.log("No city?.");
 					return $q.reject();
 				}
-				$scope.city = res.city;
+				$scope.city = res.city;	// otherwise, take them to their town
 				$location.url('square/' + res.city.name);
+			},
+			function() {
+				console.log("not going to get their city because they don't have one.");
 			});
-    });
   };
 
 	// dealing with new users:
