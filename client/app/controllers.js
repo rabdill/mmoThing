@@ -5,18 +5,35 @@ var mmoControllers = angular.module('mmoControllers', [
 mmoControllers.controller('FrontCtrl', ['$scope', 'LoginSvc', '$q', '$location', function ($scope, LoginSvc, $q, $location) {
   $scope.checkLoginState = function() {
     FB.getLoginStatus(function(status) {
-      LoginSvc.evaluate(status)
-			.then(function(res) {
-				$scope.name = res.firstName;
-
-				return LoginSvc.getCity(res.fbook.id);
-			})
-			.then(function(res) {
-				$scope.city = res.city;
-				$location.url('square/' + res.city.name);
-			});
+			console.log("Sending...");
+			processEvaluation(status);
     });
   };
+
+	/* this is split out into a separate function so we
+			can call it recursively. This is necessary when the
+			FB.login() function is invoked for someone who's
+			not properly logged into facebook, to prevent forcing
+			users to click the "login" button a second time once
+			they've granted facebook access. */
+
+	var processEvaluation = function(status) {
+		LoginSvc.evaluate(status)
+		.then(function(res) {
+			$scope.name = res.firstName;
+			return LoginSvc.getCity(res.fbook.id);
+		})
+		.then(function(res) {
+			$scope.city = res.city;
+			$location.url('square/' + res.city.name);
+		})
+		.catch(function() {
+			console.log("Catchin it");
+			FB.login(function(response){
+				processEvaluation(response);
+			});
+		});
+	};
 
 }]);
 

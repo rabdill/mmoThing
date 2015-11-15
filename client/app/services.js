@@ -68,8 +68,10 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 
 	self.evaluate = function(fbook) {
 		return $q(function(resolve, reject) {
+			console.log("Analyzing status " + fbook.status);
 			switch(fbook.status) {
 				case "connected":
+					console.log("Yup it's connected.");
 					var params = {
 						token : fbook.authResponse.accessToken
 					};
@@ -80,15 +82,14 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 						.error(reject);
 					break;
 				default:
-					FB.login(function(response){
-						self.evaluate(response);
-					});
+					reject("Gots to log in man");
 					break;
 			}
 		});
 	};
 
 	self.getCity = function(userId) {
+		console.log("We're getting the city!");
 		return $q(function(resolve, reject) {
 			$http.get('http://localhost:3000/user/' + userId + '/getCity')
 				.success(function(res) {
