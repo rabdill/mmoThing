@@ -2,11 +2,10 @@ var mmoControllers = angular.module('mmoControllers', [
 	'ngRoute'
 ]);
 
-mmoControllers.controller('LoginCtrl', ['$scope', 'LoginSvc', '$q', '$location', function ($scope, LoginSvc, $q, $location) {
+mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q', '$location', function ($scope, $rootScope, LoginSvc, $q, $location) {
 	var attempts = 0;	// to prevent a zillion facebook popups
 
   $scope.checkLoginState = function() {
-		console.log("Checkin");
 		LoginSvc.FBcheck()
 		.then(function(status) {	 // if they're logged in
 			return LoginSvc.gameCheck(status);
@@ -23,7 +22,7 @@ mmoControllers.controller('LoginCtrl', ['$scope', 'LoginSvc', '$q', '$location',
 			return $q.reject("not logged in");
 		})
 		.then(function(res) {	// if they're a known player
-				console.log("User accepted.");
+				$rootScope.token = res.fbook.token;
 				return LoginSvc.getCity(res.fbook.id);
 			},
 			function(err) {	// if they're new or not logged in
@@ -36,14 +35,14 @@ mmoControllers.controller('LoginCtrl', ['$scope', 'LoginSvc', '$q', '$location',
 			})
 			.then(function(res) {	// once we get their city
 				if(!res) {	// still trying to figure out why this would happen
-					console.log("No city?.");
+					console.log("No city?");
 					return $q.reject();
 				}
 				$scope.city = res.city;	// otherwise, take them to their town
 				$location.url('square/' + res.city.name);
 			},
 			function() {
-				console.log("not going to get their city because they don't have one.");
+				console.log("not going to get your city yet because you don't have one.");
 			});
   };
 

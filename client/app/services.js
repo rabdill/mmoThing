@@ -1,11 +1,15 @@
 mmoThing = angular.module("mmoThing");
 
-mmoThing.service("CitySvc", ["$http", "$q", function($http, $q) {
+mmoThing.service("CitySvc", ["$http", "$rootScope", "$q", function($http, $rootScope, $q) {
 	var self = this;
 
 	self.getStats = function(city) {
 		return $q(function(resolve, reject) {
-			$http.post('http://localhost:3000/' + city + '/home')
+			var params = {
+				token : $rootScope.token
+			};
+			console.log(params);
+			$http.post('http://localhost:3000/' + city + '/home', params)
 				.success(function(res) {
 					resolve(res);
 				})
@@ -69,6 +73,7 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 	self.FBcheck = function() {	// if they're logged into facebook
 		return $q(function(resolve, reject) {
 			FB.getLoginStatus(function(data) {
+				console.log("BEEP");
 				console.log(data);
 				if(data.status == "connected") {
 					resolve(data);
