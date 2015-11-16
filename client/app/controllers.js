@@ -6,6 +6,7 @@ mmoControllers.controller('LoginCtrl', ['$scope', 'LoginSvc', '$q', '$location',
 	var attempts = 0;	// to prevent a zillion facebook popups
 
   $scope.checkLoginState = function() {
+		console.log("Checkin");
 		LoginSvc.FBcheck()
 		.then(function(status) {	 // if they're logged in
 			return LoginSvc.gameCheck(status);
@@ -45,6 +46,8 @@ mmoControllers.controller('LoginCtrl', ['$scope', 'LoginSvc', '$q', '$location',
 				console.log("not going to get their city because they don't have one.");
 			});
   };
+
+	$scope.checkLoginState();
 
 	// dealing with new users:
 	var details;
