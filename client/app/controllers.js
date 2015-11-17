@@ -3,9 +3,7 @@ var mmoControllers = angular.module('mmoControllers', [
 ]);
 
 mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q', '$location', function ($scope, $rootScope, LoginSvc, $q, $location) {
-	var attempts = 0;	// to prevent a zillion facebook popups
-
-  $scope.checkLoginState = function() {
+  $scope.checkLoginState = function(promptForLogin) {
 		LoginSvc.FBcheck()
 		.then(function(status) {	 // if they're logged in
 			$rootScope.token = status.authResponse.accessToken;
@@ -14,12 +12,10 @@ mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q'
 		},
 		function() {	// if they aren't logged in
 			console.log("Not logged in.");
-			if(attempts < 2) {
+			if(promptForLogin) {
 				FB.login(function(){	// pop up the FB login box
-					$scope.checkLoginState();	// then do this again
+					$scope.checkLoginState(false);	// then do this again
 				});
-			} else {	// chill if they've already closed the login box once
-				attempts = 0; // so they can hit the button again
 			}
 			return $q.reject("not logged in");
 		})
@@ -47,7 +43,7 @@ mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q'
 			});
   };
 
-	$scope.checkLoginState();
+	$scope.checkLoginState(false);
 
 	// dealing with new users:
 	var details;
