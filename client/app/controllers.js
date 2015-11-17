@@ -63,8 +63,8 @@ mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q'
 	};
 }]);
 
-mmoControllers.controller('SquareCtrl', ['$scope', "$q", "$interval", "$routeParams", 'CitySvc', 'StoreSvc', 'MetaSvc',
-	function ($scope, $q, $interval, $routeParams, CitySvc, StoreSvc, MetaSvc) {
+mmoControllers.controller('SquareCtrl', ['$scope', "$q", "$interval", "$routeParams", "$location", 'CitySvc', 'StoreSvc', 'MetaSvc',
+	function ($scope, $q, $interval, $routeParams, $location, CitySvc, StoreSvc, MetaSvc) {
 
 	// fetch the game info data
 	MetaSvc.lookup('house').then(function(res) {
@@ -75,10 +75,15 @@ mmoControllers.controller('SquareCtrl', ['$scope', "$q", "$interval", "$routePar
 	});
 
 	var fetchData = function() {
+		console.log("Fetching...");
 		CitySvc.getStats($routeParams.city).then(function(data) {
 			$scope.city = displayFormatting(data);
+			return true;
+		},
+		function() {	// if the city request is rejected
+			$location.url('/');
+			return false;
 		});
-		console.log("Fetching...");
 	};
 
 	var rounder = function(number, places) {
@@ -103,9 +108,9 @@ mmoControllers.controller('SquareCtrl', ['$scope', "$q", "$interval", "$routePar
 		return city;
 	};
 
-	/* refreshes data on load, then every 3.05 seconds */
-	fetchData();
-	var updater = $interval(fetchData, 3050);
+	/* refreshes data on load, then every 3.05 seconds. only if it's a valid request. */
+	var validRequest = fetchData();
+	if(validRequest) var updater = $interval(fetchData, 3050);
 
 	// for canceling the auto-refresher
 	$scope.stop = function() {
