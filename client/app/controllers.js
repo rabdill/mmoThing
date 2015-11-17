@@ -8,6 +8,8 @@ mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q'
   $scope.checkLoginState = function() {
 		LoginSvc.FBcheck()
 		.then(function(status) {	 // if they're logged in
+			$rootScope.token = status.authResponse.accessToken;
+			$rootScope.userId = status.authResponse.userID;
 			return LoginSvc.gameCheck(status);
 		},
 		function() {	// if they aren't logged in
@@ -26,10 +28,9 @@ mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q'
 				return LoginSvc.getCity(res.fbook.id);
 			},
 			function(err) {	// if they're new or not logged in
-				if(err != "not logged in") {
-					err = "new user";
+				if(err == "new user") {
 					console.log("New user!");
-					prepareNewUser(status.authResponse);
+					prepareNewUser(err.authResponse);
 				}
 				return $q.reject(err);
 			})
@@ -50,17 +51,18 @@ mmoControllers.controller('LoginCtrl', ['$scope', '$rootScope', 'LoginSvc', '$q'
 
 	// dealing with new users:
 	var details;
-	var prepareNewUser = function(data) {
-		$scope.newUserTime = true;
+	var prepareNewUser = function() {
+		$scope.newUserTime = true;	// activate the form
 		details = {
-			token : data.accessToken,
-			userId : data.userID
+			token : $rootScope.token,
+			userId : $rootScope.userId
 		};
 	};
 	$scope.createUser = function() {
 		details.town = $scope.town;
 		LoginSvc.newUser(details).then(function(user) {
 			console.log(user);
+			$scope.checkLoginState();
 		});
 	};
 }]);

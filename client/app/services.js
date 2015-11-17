@@ -95,7 +95,7 @@ mmoThing.service("LoginSvc", ["$q", "$http", function($q, $http) {
 				resolve(res);
 			})
 			.error(function(err) {
-				reject("no account");
+				reject("new user");
 			});
 		});
 	};
